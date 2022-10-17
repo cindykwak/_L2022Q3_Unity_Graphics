@@ -1,15 +1,10 @@
-Shader "My/SurfaceShader/LerpRange"
+Shader "my/Cube_Lerp_Alpha"
 {
-    Properties
+     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
         _MainTex1 ("Albedo (RGB)", 2D) = "white" {}
         _MainTex2 ("Albedo (RGB)", 2D) = "white" {}
-        _LerpRange ("Lerp Range", Range(0, 1)) = 0
-
-        _Red ("Red", Range(0, 1)) = 0
-        _Green ("Green", Range(0, 1)) = 0
-        _Blue ("Blue", Range(0, 1)) = 0
+        //_LerpRange ("Lerp Range", Range(0, 1)) = 0
     }
     SubShader
     {
@@ -20,7 +15,7 @@ Shader "My/SurfaceShader/LerpRange"
 
         sampler2D _MainTex1;
         sampler2D _MainTex2;
-        float _LerpRange;
+        //float _LerpRange;
 
         struct Input
         {
@@ -28,18 +23,17 @@ Shader "My/SurfaceShader/LerpRange"
             float2 uv_MainTex2;
         };
 
-        fixed4 _Color;
-        float _Red;
-        float _Green;
-        float _Blue;
-
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             fixed4 c = tex2D (_MainTex1, IN.uv_MainTex1);
-            fixed4 d = tex2D (_MainTex2, IN.uv_MainTex2);
+            fixed4 d = tex2D (_MainTex2, IN.uv_MainTex2); // 알파 값이 있는 이미지
             //o.Albedo = c.rgb;
-            o.Albedo = lerp(c.rgb, d.rgb, _LerpRange);
-            o.Albedo = float3(_Red, _Green, _Blue);
+            //o.Albedo = lerp(c.rgb, d.rgb, _LerpRange);
+
+            o.Albedo = lerp(c.rgb, d.rgb, d.a);
+            //o.Albedo = lerp(c.rgb, d.rgb, 1-d.a);
+            //o.Albedo = lerp(d.rgb, c.rgb, d.a);            
+            
             o.Alpha = c.a;
         }
         ENDCG
